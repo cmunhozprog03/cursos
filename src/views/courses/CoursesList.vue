@@ -33,6 +33,8 @@
       <router-link :to="{name: 'CourseDetails', params: {id: course.id}}">
         {{ course.title }}
       </router-link>
+      -
+      <button @click="deleteCourse(course.id)">Eliminar</button>
       
     </li>
   </ul>
@@ -57,6 +59,7 @@ export default {
       this.getCourses();
     },
     methods: {
+
       getCategories(){
         this.axios.get('https://cursos-prueba.tk/api/categories')
           .then(response => {
@@ -65,6 +68,7 @@ export default {
             console.log(error)
           })
       },
+
       getCourses(){
         this.axios.get('https://cursos-prueba.tk/api/courses')
           .then(response => {
@@ -73,9 +77,8 @@ export default {
             console.log(error)
           })
       },
-      saveCourse() {
 
-        
+      saveCourse() {
         this.axios.post('https://cursos-prueba.tk/api/courses', this.course)
           .then(response => {
 
@@ -89,6 +92,15 @@ export default {
               category_id:''
             }
 
+          }).catch(error => {
+            console.log(error);
+          })
+      },
+
+      deleteCourse(id) {
+        this.axios.delete('https://cursos-prueba.tk/api/courses/' + id)
+          .then(() => {
+            this.courses = this.courses.filter(course => course.id != id);
           }).catch(error => {
             console.log(error);
           })
