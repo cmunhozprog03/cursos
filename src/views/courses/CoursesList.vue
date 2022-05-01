@@ -8,7 +8,7 @@
       {{ error }}
     </li>
   </ul>
-  <form @submit.prevent="saveCourse">
+  <form @submit.prevent="saveCourse" class="mb-3">
     <div>
       <label for="title">Título</label><br>
       <input v-model="course.title" type="text" id="title" placeholder="Insira o título do curso...">
@@ -29,7 +29,7 @@
       </select>
     </div>
     <br>
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
 
   </form>
   
@@ -41,10 +41,36 @@
         {{ course.title }}
       </router-link>
       -
-      <button @click="deleteCourse(course.id)">Eliminar</button>
+      <button @click="deleteCourse(course.id)" class="btn btn-danger btn-sm mb-2">Eliminar</button>
       
     </li>
   </ul>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center">
+    <nav aria-label="...">
+      <ul class="pagination">
+        <li v-for="pagination_link in pagination.links"
+          :key="'pagination_link-' + pagination_link.label" 
+          class="page-item"
+          :class="{
+            'disabled' : pagination_link.url == null,
+            'active' : pagination_link.active
+          }">
+          
+          <a class="page-link"
+            @click="changePage(pagination_link.url)" 
+            v-html="pagination_link.label" 
+            style="cursor: pointer">
+            
+          </a>
+        </li>
+        
+      </ul>
+    </nav>
+  </div>
+
+
 </template>
 
 <script>
@@ -60,6 +86,8 @@ export default {
           category_id: ''
         },
         errors: [],
+        pagination: {},
+        
         
       }
     },
@@ -67,6 +95,32 @@ export default {
       this.getCategories();
       this.getCourses();
     },
+
+    computed: {
+      page(){
+
+        let page = this.$route.query.page ?? '1';
+
+        if(page > this.pagination.last_page) {
+
+          this.$router.replace({
+            query: {
+              page: this.pagination.last_page
+            }
+          })
+          return this.pagination.last_page
+        }
+
+        return page;
+      }
+    },
+
+    watch: {
+      page() {
+        this.getCourses();
+      }
+    },
+
     methods: {
 
       getCategories(){
@@ -79,9 +133,19 @@ export default {
       },
 
       getCourses(){
-        this.axios.get('https://cursos-prueba.tk/api/courses')
+        this.axios.get('https://cursos-prueba.tk/api/courses?sort=-id&per_page=5&page=' + this.page)
           .then(response => {
-            this.courses = response.data;
+
+            let res = response.data;
+            this.courses = res.data;
+
+            this.pagination ={
+              links: res.links,
+              last_page: res.last_page
+            }
+
+            
+
           }).catch(error => {
             console.log(error)
           })
@@ -89,11 +153,13 @@ export default {
 
       saveCourse() {
         this.axios.post('https://cursos-prueba.tk/api/courses', this.course)
-          .then(response => {
+          .then(() => {
 
-            let course = response.data;
+            // let course = response.data;
 
-            this.courses.push(course);
+            // this.courses.push(course);
+
+            this.getCourses();
             
             this.course = {
               title: '',
@@ -113,10 +179,18 @@ export default {
       deleteCourse(id) {
         this.axios.delete('https://cursos-prueba.tk/api/courses/' + id)
           .then(() => {
-            this.courses = this.courses.filter(course => course.id != id);
+            this.getCourses();
+            // this.courses = this.courses.filter(course => course.id != id);
           }).catch(error => {
             console.log(error);
           })
+      },
+      changePage(url){
+        this.$router.replace({
+          query: {
+            page: url.split('page=')[1]
+          }
+        })
       }
     }
 }
