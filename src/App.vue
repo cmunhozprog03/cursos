@@ -7,7 +7,7 @@
   </nav>
 
   <div v-if="auth" class="mb-3">
-    <button class="btn btn-danger">
+    <button class="btn btn-danger" @click="logout">
       Encerrar Seção
     </button>
   </div>
@@ -31,7 +31,7 @@
     ...mapState(['auth'])
   },
    methods: {
-     ...mapActions(['setAuth'])
+     ...mapActions(['setAuth', 'logout'])
    }
  }
  </script>
