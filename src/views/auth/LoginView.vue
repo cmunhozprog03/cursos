@@ -1,8 +1,10 @@
 <template>
   <div class="container">
-    <h1>Login</h1>
+   
     <div class="card shadow mx-auto">
       <div class="card-body">
+        <h1>Login</h1>
+        {{auth}}
         <form @submit.prevent="login">
           <div class="mb-3">
             <label for="email" class="mb-1">Email</label>
@@ -29,6 +31,9 @@
 </template>
 
 <script>
+
+import {mapMutations, mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -37,7 +42,13 @@ export default {
       disabled: false,
     }
   },
+  computed: {
+    ...mapState(['auth'])
+  },
   methods: {
+
+    ...mapMutations(['setAuth']),
+
     login() {
 
       this.disabled = true;
@@ -49,8 +60,13 @@ export default {
         username: this.email,
         password: this.password
       }).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
+        localStorage.setItem('auth', JSON.stringify(response.data));
+        this.setAuth(response.data);
         this.disabled = false;
+        this.$router.push({
+          name: 'Dashboard'
+        });
       })
     }
   }

@@ -2,15 +2,40 @@
   <nav class="navigation">
     <router-link to="/">Home</router-link> |
     <router-link :to="{ name: 'CoursesList'}">Cursos</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link :to="{ name: 'Dashboard'}">Dashboard</router-link> 
   </nav>
-  <nav class="navigation">
+
+  <div v-if="auth" class="mb-3">
+    <button class="btn btn-danger">
+      Encerrar Seção
+    </button>
+  </div>
+
+  <nav v-else class="navigation">
     <router-link :to="{ name: 'Login'}">Login</router-link> |
     <router-link :to="{ name: 'Register'}">Register</router-link> 
     
   </nav>
   <router-view/>
 </template>
+
+ <script>
+ import { mapActions, mapState } from 'vuex'
+ 
+ export default {
+   created() {
+     this.setAuth()
+   },
+   computed: {
+    ...mapState(['auth'])
+  },
+   methods: {
+     ...mapActions(['setAuth'])
+   }
+ }
+ </script>
+  
 
 <style>
 #app {
