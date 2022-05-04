@@ -3,10 +3,10 @@
   <p>{{ course.description }}</p>
   <p>
     <b>Categoria: </b>
-    {{ course.category.name }}
+    {{ category.name }}
   </p>
   <router-link :to="{name: 'CourseEdit', params: {
-    id: course.id
+    id: $route.params.id
   }}">
     Editar Curso
   </router-link>
@@ -20,7 +20,8 @@ export default {
 
   data() {
     return {
-      course: {}
+      course: {},
+      category: {}
     }
   },
   created() {
@@ -28,9 +29,10 @@ export default {
   },
   methods: {
     getCourse() {
-      this.axios.get('https://cursos-prueba.tk/api/courses/' + this.$route.params.id + '?included=category')
+      this.axios.get('/api/courses/' + this.$route.params.id + '?included=category')
         .then(response =>{
           this.course = response.data;
+          this.category = response.data.category;
         }). catch (error => {
           console.log(error)
         })
