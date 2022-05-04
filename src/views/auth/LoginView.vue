@@ -15,7 +15,9 @@
               placeholder="Insira sua senha">
           </div>
 
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" :class="{
+            'disabled': disabled
+          }">
             Iniciar a seção
           </button>
          
@@ -32,11 +34,24 @@ export default {
     return {
       email: '',
       password: '',
+      disabled: false,
     }
   },
   methods: {
     login() {
-      console.log('iniciar seção')
+
+      this.disabled = true;
+
+      this.axios.post('/api/login', {
+        gran_type: 'password',
+        client_id: '95e1d3ff-7270-4e6c-8e9c-6dcd6bc10df2',
+        client_secret: 'O3tH7XtTgQTD06hMZV2NgfiRk94IsaUGFBTKYKdP',
+        username: this.email,
+        password: this.password
+      }).then((response) => {
+        console.log(response.data);
+        this.disabled = false;
+      })
     }
   }
 }
