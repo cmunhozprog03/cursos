@@ -53,7 +53,7 @@ export default {
 
       this.disabled = true;
 
-      this.axios.post('/api/login', {
+      this.axios.post('/login', {
         gran_type: 'password',
         client_id: '95e1d3ff-7270-4e6c-8e9c-6dcd6bc10df2',
         client_secret: 'O3tH7XtTgQTD06hMZV2NgfiRk94IsaUGFBTKYKdP',

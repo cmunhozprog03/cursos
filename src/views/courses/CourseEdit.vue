@@ -58,7 +58,7 @@ export default {
   methods: {
     getCategories() {
       this.axios
-        .get("/api/categories")
+        .get("/categories")
         .then((response) => {
           this.categories = response.data;
         })
@@ -70,7 +70,7 @@ export default {
     getCourse() {
       this.axios
         .get(
-          "/api/courses/" +
+          "/courses/" +
             this.$route.params.id +
             "?included=category"
         )
@@ -84,7 +84,7 @@ export default {
 
     updateCourse() {
       this.axios
-        .put('/api/courses/' + this.$route.params.id, this.course)
+        .put('/courses/' + this.$route.params.id, this.course)
         .then(() =>{
           this.$router.push({name: 'CourseDetails', params: {id: this.$route.params.id}})
         }).catch(error => {
