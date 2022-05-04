@@ -1,8 +1,13 @@
 <template>
-  <nav>
+  <nav class="navigation">
     <router-link to="/">Home</router-link> |
     <router-link :to="{ name: 'CoursesList'}">Cursos</router-link> |
     <router-link to="/about">About</router-link>
+  </nav>
+  <nav class="navigation">
+    <router-link :to="{ name: 'Login'}">Login</router-link> |
+    <router-link :to="{ name: 'Register'}">Register</router-link> 
+    
   </nav>
   <router-view/>
 </template>
@@ -16,16 +21,16 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.navigation {
+  margin: 30px;
 }
 
-nav a {
+.navigation a {
   font-weight: bold;
   color: #2c3e50;
 }
 
-nav a.router-link-exact-active {
+.navigation a.router-link-exact-active {
   color: #42b983;
 }
 </style>
